@@ -1,0 +1,52 @@
+server:
+  port: 8080
+client:
+  path: file://[frontendfilepath]
+kafka:
+    consumer:
+        auto:
+            commit:
+                interval:
+                    ms: 1000
+        bootstrap:
+            servers: localhost:9092
+        enable:
+            auto:
+                commit: true
+        group:
+            id: test
+    key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+    producer:
+        acks: all
+        batch:
+            size: 16384
+        bootstrap:
+            servers: 127.0.0.1:9092
+        buffer:
+            memory: 33554432
+        linger:
+            ms: 1
+        retries: 0
+    value:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+elasticsearch:
+    host: http://127.0.0.1:9200
+write:
+  jdbc:
+    password: password
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://[server]:[port]/[database]?characterEncoding=utf-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
+    username: name
+mybatis:
+  mapper-locations: classpath*:mybatis/*.xml
+jdbc:
+  type: com.alibaba.druid.pool.DruidDataSource
+read:
+  jdbc:
+    password: password
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://[server]:[port]/[database]?characterEncoding=utf-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
+    username: name
