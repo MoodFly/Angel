@@ -37,17 +37,17 @@ elasticsearch:
 write:
   jdbc:
     password: password
-    driver-class-name: com.mysql.jdbc.Driver
+    driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://[server]:[port]/[database]?characterEncoding=utf-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
     username: name
 mybatis:
-  mapper-locations: classpath*:mybatis/*.xml
+  mapper-locations: classpath*:mapper/*.xml
 jdbc:
   type: com.alibaba.druid.pool.DruidDataSource
 read:
   jdbc:
     password: password
-    driver-class-name: com.mysql.jdbc.Driver
+    driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://[server]:[port]/[database]?characterEncoding=utf-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
     username: name
 

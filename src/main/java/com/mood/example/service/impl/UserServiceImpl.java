@@ -2,7 +2,10 @@ package com.mood.example.service.impl;
 
 import com.mood.annotation.MoodDataSource;
 import com.mood.base.User;
+import com.mood.example.dao.ExampleModelMapper;
+import com.mood.example.model.ExampleModel;
 import com.mood.example.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +18,8 @@ import static com.mood.angelenum.DataSourceType.WRITE;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+    @Autowired
+    ExampleModelMapper exampleModelMapper;
     @MoodDataSource(WRITE)
     @Override
     public int insert(User shop) {
@@ -38,5 +43,11 @@ public class UserServiceImpl implements UserService {
     @MoodDataSource(READ)
     public User queryCount(Map<String, Object> params) {
         return null;
+    }
+
+    @Override
+    @MoodDataSource(READ)
+    public ExampleModel queryOne(Long params) {
+        return exampleModelMapper.queryOne(params).get(0);
     }
 }

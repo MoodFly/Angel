@@ -8,6 +8,8 @@ import com.mood.utils.DatabaseContextHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,18 +21,25 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class MultiDataSourceAspect {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MultiDataSourceAspect.class) ;
     @Around("@annotation(moodDataSource)" )
     public Object invokeMethod(ProceedingJoinPoint joinPoint, MoodDataSource moodDataSource) throws Throwable {
         try{
+            Class clazz = joinPoint.getTarget().getClass();
             if (moodDataSource.value().getValue().equals(DataSourceType.getValue("write"))){
                 DatabaseContextHolder.setDatabaseType(DataSourceType.WRITE);
             }else if (moodDataSource.value().getValue().equals(DataSourceType.getValue("read"))){
                 DatabaseContextHolder.setDatabaseType(DataSourceType.READ);
+            }else if (clazz.isAnnotationPresent(MoodDataSource.class)){
+                MoodDataSource dataSourceAnnotation=(MoodDataSource)clazz.getAnnotation(MoodDataSource.class);
+                    DatabaseContextHolder.setDatabaseType(dataSourceAnnotation.value());
             }else {
-                throw new AngelException(ApplicationCode.unSwitchDataSource);
+                DatabaseContextHolder.setDatabaseType(DataSourceType.READ);
             }
+            LOGGER.info("Choose DataSource:{} ",DatabaseContextHolder.getDatabaseType());
             return joinPoint.proceed();//调用目标方法
         }catch (Exception e){
+            e.printStackTrace();
             throw new AngelException(ApplicationCode.unSwitchDataSource);
         }finally {
             DatabaseContextHolder.clear();

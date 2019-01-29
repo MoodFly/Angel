@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.renrenche.mood"))
+                .apis(RequestHandlerSelectors.basePackage("com.mood"))
                 .paths(PathSelectors.any())
                 .build();
     }

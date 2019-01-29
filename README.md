@@ -24,7 +24,7 @@
 │  │  │          ├─messagebus 消息总线 使用中间件Kafka
 │  │  │          └─utils 工具类
 │  │  └─resources
-│  │      └─mybatis mybatis配置文件
+│  │      └─mapper mybatis配置文件
 │  └─test
 │      └─java
 │          └─com

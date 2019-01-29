@@ -23,6 +23,12 @@
 	</properties>
 
 	<dependencies>
+		<!-- 支持 @ConfigurationProperties 注解 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
@@ -106,7 +112,6 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${swagger-ui.version}</version>
 		</dependency>
-
 		<!-- swagger2 -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -133,6 +138,14 @@
 	</dependencyManagement>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/dao/*Mapper.xml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -148,5 +161,4 @@
 			<url>https://repo.spring.io/milestone</url>
 		</repository>
 	</repositories>
-
 </project>
