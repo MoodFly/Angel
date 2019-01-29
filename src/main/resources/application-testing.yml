@@ -50,5 +50,11 @@ read:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://[server]:[port]/[database]?characterEncoding=utf-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
     username: name
+mood:
+  redis:
+    host: [redisServer]
+    database: [database]
+    port: [port]
+    password: [password]
 
 

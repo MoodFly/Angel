@@ -32,14 +32,13 @@ public class MultiDataSourceAspect {
                 DatabaseContextHolder.setDatabaseType(DataSourceType.READ);
             }else if (clazz.isAnnotationPresent(MoodDataSource.class)){
                 MoodDataSource dataSourceAnnotation=(MoodDataSource)clazz.getAnnotation(MoodDataSource.class);
-                    DatabaseContextHolder.setDatabaseType(dataSourceAnnotation.value());
+                DatabaseContextHolder.setDatabaseType(dataSourceAnnotation.value());
             }else {
                 DatabaseContextHolder.setDatabaseType(DataSourceType.READ);
             }
             LOGGER.info("Choose DataSource:{} ",DatabaseContextHolder.getDatabaseType());
             return joinPoint.proceed();//调用目标方法
         }catch (Exception e){
-            e.printStackTrace();
             throw new AngelException(ApplicationCode.unSwitchDataSource);
         }finally {
             DatabaseContextHolder.clear();
