@@ -56,5 +56,7 @@ mood:
     database: [database]
     port: [port]
     password: [password]
-
+dingding:
+  webhookUrl:
+    monitor_dingding_broadcast: [youWebHookUrl]
 

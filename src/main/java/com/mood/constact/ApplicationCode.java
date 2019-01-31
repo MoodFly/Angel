@@ -14,4 +14,6 @@ public interface ApplicationCode {
     ErrorCode unCreateRedisPool=new ErrorCode(5502,"无法创建RedisPool");;
     ErrorCode unConnnectRedis=new ErrorCode(5503,"无法连接Redis");
     ErrorCode unParamException=new ErrorCode(5504,"参数校验失败");
+    ErrorCode errorRequestUrl=new ErrorCode(5505,"请求地址校验失败");
+    ErrorCode errorRequestResult=new ErrorCode(5506,"返回结果错误");
 }

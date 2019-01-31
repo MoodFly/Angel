@@ -19,6 +19,7 @@
 		<aspectj.version>1.9.1</aspectj.version>
 		<swagger2.version>2.7.0</swagger2.version>
 		<swagger-ui.version>2.7.0</swagger-ui.version>
+		<httpclient.version>4.5.3</httpclient.version>
 		<spring-cloud.version>Greenwich.RC2</spring-cloud.version>
 	</properties>
 
@@ -135,6 +136,11 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid-spring-boot-starter</artifactId>
 			<version>1.1.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
 		</dependency>
 	</dependencies>
 
