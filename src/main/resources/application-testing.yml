@@ -59,4 +59,5 @@ mood:
 dingding:
   webhookUrl:
     monitor_dingding_broadcast: [youWebHookUrl]
+    phones: [phones]
 

@@ -13,7 +13,6 @@ public class ExampleModel {
     private Integer id ;
     private Long cpOrderId ;//1
     private Integer examineStatus ;//1
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date examineTime ;//
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date succeedTime;//

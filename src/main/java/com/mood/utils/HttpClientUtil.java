@@ -160,6 +160,7 @@ public class HttpClientUtil {
         log.append("header参数:").append(requestHeader);
         StringEntity entity = new StringEntity(bodyParam, encoding);
         entity.setContentType(contentType);
+        log.append("body参数:").append(bodyParam).append("ContentType:").append(contentType);
         httpPost.setEntity(entity);
         HttpResponse httpResponse =null;
         StopWatch watch = new StopWatch();

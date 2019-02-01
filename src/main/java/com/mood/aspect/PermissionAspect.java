@@ -4,12 +4,16 @@ import com.mood.base.User;
 import com.mood.constact.ApplicationCode;
 import com.mood.annotation.Permission;
 import com.mood.exception.AngelException;
+import com.mood.notify.DingDingNotifyMessageText;
 import com.mood.utils.CheckPermissionUtil;
+import com.mood.utils.DingDingNotifyUtil;
 import com.mood.utils.UserHandle;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -27,41 +31,51 @@ import java.util.Set;
 @Aspect
 @Component
 public class PermissionAspect {
+
+    @Autowired
+    DingDingNotifyUtil dingDingNotifyUtil;
     //config you scanpackage
-    @Around(value = "execution(*  com.renrenche.mood.example..*.*(..))" )
-    public Object invokeMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around(value = "execution(*  com.mood.example..*.*(..))" )
+    public Object invokeMethod(ProceedingJoinPoint joinPoint) {
         final Set<String> permissionCodeSet =new HashSet<>(32);
         Class clazz = joinPoint.getTarget().getClass();
-        if (!clazz.isAnnotationPresent(Permission.class)) {
-            return joinPoint.proceed();
+        try {
+            if (!clazz.isAnnotationPresent(Permission.class)) {
+                    return joinPoint.proceed();
+            }
+            String classPermissionCode="";
+            Annotation annotation = clazz.getAnnotation(Permission.class);
+            if(annotation instanceof Permission) {
+                Permission permAnnotation = (Permission)annotation;
+                classPermissionCode = permAnnotation.Param();
+            }
+            if(!StringUtils.isEmpty(classPermissionCode)) {
+                String []arrMethodAccess = classPermissionCode.split(",");
+                permissionCodeSet.addAll(Arrays.asList(arrMethodAccess));
+            }
+            Method method = ((MethodSignature)joinPoint.getSignature()).getMethod();
+            String methodPermissionCode = "";
+            if (method.isAnnotationPresent(Permission.class)) {
+                Permission permAnnotation = method.getAnnotation(Permission.class);
+                methodPermissionCode = permAnnotation.Param();
+            }
+            if(!StringUtils.isEmpty(methodPermissionCode)) {
+                String []arrMethodAccess = methodPermissionCode.split(",");
+                permissionCodeSet.addAll(Arrays.asList(arrMethodAccess));
+            }
+            if(permissionCodeSet.isEmpty()) {
+                return joinPoint.proceed();
+            }
+            User user= UserHandle.getUser();
+            if (!CheckPermissionUtil.checkPermission(permissionCodeSet,user)){
+                throw new AngelException(ApplicationCode.unPermission);
+            }
+            joinPoint.proceed();//调用目标方法
+        } catch (Exception e) {
+            dingDingNotifyUtil.sendDingDingMessage(e);
+        } catch (Throwable throwable) {
+            dingDingNotifyUtil.sendDingDingMessage(throwable);
         }
-        String classPermissionCode="";
-        Annotation annotation = clazz.getAnnotation(Permission.class);
-        if(annotation instanceof Permission) {
-            Permission permAnnotation = (Permission)annotation;
-            classPermissionCode = permAnnotation.Param();
-        }
-        if(!StringUtils.isEmpty(classPermissionCode)) {
-            String []arrMethodAccess = classPermissionCode.split(",");
-            permissionCodeSet.addAll(Arrays.asList(arrMethodAccess));
-        }
-        Method method = ((MethodSignature)joinPoint.getSignature()).getMethod();
-        String methodPermissionCode = "";
-        if (method.isAnnotationPresent(Permission.class)) {
-            Permission permAnnotation = method.getAnnotation(Permission.class);
-            methodPermissionCode = permAnnotation.Param();
-        }
-        if(!StringUtils.isEmpty(methodPermissionCode)) {
-            String []arrMethodAccess = methodPermissionCode.split(",");
-            permissionCodeSet.addAll(Arrays.asList(arrMethodAccess));
-        }
-        if(permissionCodeSet.isEmpty()) {
-            return joinPoint.proceed();
-        }
-        User user= UserHandle.getUser();
-        if (!CheckPermissionUtil.checkPermission(permissionCodeSet,user)){
-            throw new AngelException(ApplicationCode.unPermission);
-        }
-        return joinPoint.proceed();//调用目标方法
+        return null;
     }
 }

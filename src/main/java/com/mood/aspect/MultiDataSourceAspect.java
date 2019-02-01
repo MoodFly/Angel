@@ -5,11 +5,13 @@ import com.mood.constact.ApplicationCode;
 import com.mood.angelenum.DataSourceType;
 import com.mood.exception.AngelException;
 import com.mood.utils.DatabaseContextHolder;
+import com.mood.utils.DingDingNotifyUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class MultiDataSourceAspect {
+    @Autowired
+    DingDingNotifyUtil dingDingNotifyUtil;
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiDataSourceAspect.class) ;
     @Around("@annotation(moodDataSource)" )
     public Object invokeMethod(ProceedingJoinPoint joinPoint, MoodDataSource moodDataSource) throws Throwable {
@@ -39,6 +43,7 @@ public class MultiDataSourceAspect {
             LOGGER.info("Choose DataSource:{} ",DatabaseContextHolder.getDatabaseType());
             return joinPoint.proceed();//调用目标方法
         }catch (Exception e){
+            dingDingNotifyUtil.sendDingDingMessage(e);
             throw new AngelException(ApplicationCode.unSwitchDataSource);
         }finally {
             DatabaseContextHolder.clear();
