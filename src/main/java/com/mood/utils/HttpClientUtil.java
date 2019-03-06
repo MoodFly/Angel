@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mood.constact.ApplicationCode;
 import com.mood.exception.AngelException;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
@@ -21,6 +22,8 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
+import org.testng.collections.Maps;
+
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -105,27 +108,10 @@ public class HttpClientUtil {
     public String httpGetMethod(String url, Map<String,String> requestParam,Map<String,String> requestHeader,String encoding){
         String result=null;
         StringBuffer log=new StringBuffer();
-        if (url==null&&url.equals("")){throw new AngelException(ApplicationCode.errorRequestUrl);}
-        StringBuffer urlSend=new StringBuffer(url);
-        log.append("请求地址:").append(url);
-        List<NameValuePair> qparams = Lists.newArrayList();
-        for (Map.Entry<String, String> entry : requestParam.entrySet()) {
-            qparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
-        String queryParamStr = URLEncodedUtils.format(qparams, encoding);
-        log.append("请求参数:").append(queryParamStr);
-        urlSend.append(queryParamStr);
-        HttpGet httpGet = new HttpGet(urlSend.toString());
-        for (Map.Entry<String, String> entry : requestHeader.entrySet()) {
-            httpGet.setHeader(entry.getKey(),entry.getValue());
-        }
-        log.append("header参数:").append(requestHeader);
-        HttpResponse httpResponse =null;
         StopWatch watch = new StopWatch();
         watch.start();
         try {
-            httpResponse = closeableHttpClient.execute(httpGet);
-            result= EntityUtils.toString(httpResponse.getEntity(),encoding);
+            result = EntityUtils.toString(httpGetMethodBase(url, requestParam, requestHeader,encoding), encoding);
             watch.stop();
             log.append("请求结果:").append(result).append("请求耗时:").append(watch.getTotalTimeMillis());
             if (result==null){
@@ -207,6 +193,55 @@ public class HttpClientUtil {
             } catch (InterruptedException ex) {
             }
         }
+    }
+    /**
+     * httpGetMethodBase GET 请求
+     * @param url 请求路径
+     * @param requestParam 请求参数
+     * @param requestHeader 封装header
+     * @param encoding 编码
+     * @return
+     */
+    public HttpEntity httpGetMethodBase(String url, Map<String,String> requestParam,Map<String,String> requestHeader,String encoding){
+        HttpEntity result=null;
+        StringBuffer log=new StringBuffer();
+        if (url==null&&url.equals("")){throw new AngelException(ApplicationCode.errorRequestUrl);}
+        StringBuffer urlSend=new StringBuffer(url);
+        log.append("请求地址:").append(url);
+        List<NameValuePair> qparams = Lists.newArrayList();
+        for (Map.Entry<String, String> entry : requestParam.entrySet()) {
+            qparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        }
+        String queryParamStr = URLEncodedUtils.format(qparams, encoding);
+        log.append("请求参数:").append(queryParamStr);
+        urlSend.append(queryParamStr);
+        HttpGet httpGet = new HttpGet(urlSend.toString());
+        for (Map.Entry<String, String> entry : requestHeader.entrySet()) {
+            httpGet.setHeader(entry.getKey(),entry.getValue());
+        }
+        log.append("header参数:").append(requestHeader);
+        HttpResponse httpResponse =null;
+        StopWatch watch = new StopWatch();
+        watch.start();
+        try {
+            httpResponse = closeableHttpClient.execute(httpGet);
+            result= httpResponse.getEntity();
+            watch.stop();
+            log.append("请求结果:").append(result).append("请求耗时:").append(watch.getTotalTimeMillis());
+            if (result==null){
+                throw new AngelException(ApplicationCode.errorRequestResult);
+            }
+            logger.info(log.toString());
+        } catch (Exception e) {
+            log.append("返回异常:").append(e.getMessage());
+            e.printStackTrace();
+            //todo 增加重试
+            logger.error(log.toString());
+        }
+        return result;
+    }
+    public HttpEntity httpGetMethod(String url){
+        return httpGetMethodBase(url, Maps.newHashMap(), Maps.newHashMap(),"UTF-8");
     }
 }
 
