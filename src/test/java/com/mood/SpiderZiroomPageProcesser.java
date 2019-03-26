@@ -6,13 +6,13 @@ import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.pipeline.ConsolePipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class SpiderZiroomPageProcesser implements PageProcessor {
 
     private Site site = Site.me().setDomain("http://www.ziroom.com/z/nl/z2.html?qwd=%E9%9C%8D%E8%90%A5");
-
     @Override
     public void process(Page page) {
 //        List<String> links = page.getHtml().links().regex("http://my\\.oschina\\.net/flashsword/blog/\\d+").all();
@@ -33,7 +33,31 @@ public class SpiderZiroomPageProcesser implements PageProcessor {
     }
 
     public static void main(String[] args) {
-        Spider.create(new SpiderZiroomPageProcesser()).addUrl("http://www.ziroom.com/z/nl/z2.html?qwd=%E9%9C%8D%E8%90%A5")
-                .addPipeline(new ConsolePipeline()).run();
+        Set<LinkedHashMap<String,Object>> stream=new HashSet<>(64);
+        Set<String> setUrl=new HashSet<>(64);
+        StreamPipeline streamPipeline=new StreamPipeline(stream,setUrl);
+        ExecutorService executor=Executors.newFixedThreadPool(36);
+        CountDownLatch countDownLatch=new CountDownLatch(36);
+        for (int i=1;i<=36;i++){
+            int finalI = i;
+            executor.execute(()->{
+                Spider.create(new SpiderZiroomPageProcesser()).addUrl("http://www.ziroom.com/z/nl/z2.html?qwd=%E9%9C%8D%E8%90%A5&p="+ finalI)
+                        .addPipeline(streamPipeline).run();
+                countDownLatch.countDown();
+            });
+
+        }
+        try {
+            countDownLatch.await();
+            stream.forEach(x->{
+                x.forEach((k,v)->{
+                    System.out.println(k + ":\t" + v);
+                });
+            });
+            executor.shutdown();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }
