@@ -35,14 +35,29 @@ public class IdempotentAspect {
             String [] paraNameArr=u.getParameterNames(clazz.getMethod(joinPoint.getSignature().getName(), AngelRequestParam.class));
             String requestKey =parseKey(idempotent.express(),paraNameArr,joinPoint.getArgs());
             LOGGER.info("Idempotent KEY:{} ",requestKey);
-            resp = joinPoint.proceed();
+            resp = checkIdempotent(requestKey)? joinPoint.proceed():"已发生调用，禁止重复调用";
         }catch (Exception e){
             LOGGER.error("Idempotent create Error Info:{} ",e);
         }finally {
             directResponse(resp, caller);
         }
     }
+    /**
+     * 调用redis读取数据请求幂等key，如果存在，则禁止去调用业务方法
+     * @param requestKey
+     * @return
+     */
+    private Boolean checkIdempotent(String requestKey) {
+        return false;
+    }
 
+    /**
+     * 幂等表达式 在当前版本boot无法自动解析。手动调用SpelExpressionParser去解析与一下。
+     * @param express
+     * @param paraNameArr
+     * @param args
+     * @return
+     */
     private String parseKey(String express, String [] paraNameArr,Object[] args) {
         StandardEvaluationContext context = new StandardEvaluationContext();
         for(int i=0;i<paraNameArr.length;i++){
@@ -53,7 +68,6 @@ public class IdempotentAspect {
 
     /**
      * 直接返回结果,不调用业务方法
-     *
      * @param resp
      * @param caller
      * @return
