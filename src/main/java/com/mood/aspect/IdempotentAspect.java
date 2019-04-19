@@ -1,17 +1,20 @@
 package com.mood.aspect;
 import com.mood.annotation.Idempotent;
 import com.mood.base.AngelRequestParam;
+import com.mood.utils.RedisUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class IdempotentAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(IdempotentAspect.class) ;
+    @Autowired
+    private Jedis jedis;
     @Around("@annotation(idempotent)" )
     public void invokeMethod(ProceedingJoinPoint joinPoint, Idempotent idempotent) throws Throwable {
         Object resp = null;
@@ -48,6 +53,9 @@ public class IdempotentAspect {
      * @return
      */
     private Boolean checkIdempotent(String requestKey) {
+        if (!RedisUtil.getInstance(jedis).getMonitorRequestKey(requestKey)){
+            return RedisUtil.getInstance(jedis).getManagerRequestKey(requestKey);
+        }
         return false;
     }
 
