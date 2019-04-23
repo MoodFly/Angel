@@ -37,6 +37,7 @@ public class JDBCUtils {
     private final static Logger logger = LoggerFactory.getLogger(JDBCUtils.class);
     private static final String    CLASSPATH_URL_PREFIX = "classpath:";
     private static final String    JDBC = "jdbc:";
+    private CountDownLatch countDownLatch=null;
     private Connection connection=null;
     ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
     ExecutorService executor = new ThreadPoolExecutor(5, 200, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
@@ -189,7 +190,7 @@ public class JDBCUtils {
      * @param runnable
      */
     private void commitJob(int pageTotal,int pageSize,Function runnable)throws Exception{
-        CountDownLatch countDownLatch=new CountDownLatch(pageTotal);
+         countDownLatch=new CountDownLatch(pageTotal);
             for (int i=0;i<pageTotal;i++){
                 final int m=i*pageSize;
                 executor.execute(()-> {
@@ -209,7 +210,7 @@ public class JDBCUtils {
      * @param runnable
      */
     private Object submitJob(int pageTotal,int pageSize,Function runnable)throws Exception{
-        CountDownLatch countDownLatch=new CountDownLatch(pageTotal);
+        countDownLatch =new CountDownLatch(pageTotal);
         List reslts= Lists.newArrayList();
             for (int i=0;i<pageTotal;i++){
                 final int m=i*pageSize;
