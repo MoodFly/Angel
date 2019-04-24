@@ -2,6 +2,7 @@ package com.mood.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mood.constact.ApplicationCode;
 import com.mood.exception.AngelException;
 import org.apache.http.HttpEntity;
@@ -28,9 +29,8 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+
 /**
  * @author: by Mood
  * @date: 2019-01-31 18:48:23
@@ -76,7 +76,8 @@ public class HttpClientUtil {
      * 定期回收过期httpclient线程池
      */
     private static final ConnectionMonitorWorker connectionMonitorWorker;
-    private static final Executor executor=Executors.newFixedThreadPool(5);
+    private static final ExecutorService executor = new ThreadPoolExecutor(5, 200, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1024), new ThreadFactoryBuilder().setNameFormat("HttpClientUtil-WORKER-POOL-%d").build(), new ThreadPoolExecutor.AbortPolicy());
+
 
     static {
         connectionMonitorWorker = new ConnectionMonitorWorker();
