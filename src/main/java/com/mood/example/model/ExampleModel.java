@@ -11,7 +11,7 @@ import java.util.Date;
 @ToString
 public class ExampleModel {
     private Integer id ;
-    private Long cpOrderId ;//1
+    private Long OrderId ;//1
     private Integer examineStatus ;//1
     private Date examineTime ;//
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")

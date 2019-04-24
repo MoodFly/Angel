@@ -3,7 +3,6 @@
 <mapper namespace="com.mood.example.dao.ExampleModelMapper">
     <resultMap id="BaseResultMap" type="com.mood.example.model.ExampleModel">
         <id column="id" jdbcType="INTEGER" property="id" />
-        <result column="cp_order_id" jdbcType="BIGINT" property="cpOrderId" />
         <result column="examine_status" property="examineStatus" />
         <result column="examine_time"  property="examineTime" />
         <result column="succeed_time"  property="succeedTime" />
@@ -14,14 +13,14 @@
         <result column="source"  property="source" />
     </resultMap>
     <sql id="base_Column_List">
-        id,cp_order_id AS cpOrderId,examine_status AS examineStatus,examine_time AS examineTime,succeed_time AS succeedTime
+        examine_status AS examineStatus,examine_time AS examineTime,succeed_time AS succeedTime
         ,propose_time AS proposeTime,create_time AS createTime ,update_time AS updateTime,city,source
     </sql>
     <select id="queryOne" resultMap="BaseResultMap" parameterType="java.lang.Long">
         select
         <include refid="base_Column_List" />
-        from transfer_examine
-        WHERE cp_order_id = #{cpOrderId}
+        from examine
+        WHERE id = #{OrderId}
         limit 1;
     </select>
 </mapper>
