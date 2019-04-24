@@ -7,7 +7,13 @@ package com.mood.angelenum;
  */
 
 public enum DataSourceType {
+    /**
+     * 写数据源
+     */
     WRITE("write"),
+    /**
+     * 读数据源
+     */
     READ("read");
     public String value;
     DataSourceType(String value){
