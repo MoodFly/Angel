@@ -127,7 +127,7 @@ public class JDBCUtils {
      * @param tableName 表名
      * @param column 查询数据列
      * @param whereCondition 条件语句
-     * @param limit 是否分页
+     * @param limit 是否分页 当limit传入""的时候，不使用mysql特有的分页关键字，为标准SQL，支出其他数据库
      * @param offset 分页偏移量
      * @param size 每页数据量
      * @return
@@ -136,11 +136,11 @@ public class JDBCUtils {
     private ResultSet queryData(String tableName, String column, String whereCondition, String limit, int offset, int size) {
         String sql ="";
         if (whereCondition.equals("")&&!limit.equals("")){
-            sql="select "+column+" from "+ tableName +" where  " + " limit "+ offset +", " +size ;
+            sql="select "+column+" from "+ tableName + " limit "+ offset +", " +size ;
         }else if(!whereCondition.equals("")&&!limit.equals("")){
             sql="select "+column+" from "+ tableName +" where " + whereCondition +" limit "+ offset +", " +size ;
         }else if(whereCondition.equals("")&&limit.equals("")){
-            sql="select "+column+" from "+ tableName +" where " + whereCondition +" limit "+ offset +", " +size ;
+            sql="select "+column+" from "+ tableName +" where " + whereCondition ;
         }
         ResultSet rs =null;
         PreparedStatement pstmt;
