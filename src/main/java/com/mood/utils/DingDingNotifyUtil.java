@@ -1,11 +1,11 @@
 package com.mood.utils;
 
+import com.google.common.collect.Maps;
 import com.mood.notify.DingDingNotifyMessageText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.testng.collections.Maps;
 
 /**
  * @author: by Mood
@@ -28,7 +28,7 @@ public class DingDingNotifyUtil {
      * @param json 发送的消息
      */
     public void sendDingDingMessage(String path,String json){
-        httpClientUtil.httpPostMethod(path, json,"application/json" ,Maps.newHashMap(), Maps.newHashMap(),"UTF-8");
+        httpClientUtil.httpPostMethod(path, json,"application/json" , Maps.newHashMap(), Maps.newHashMap(),"UTF-8");
     }
 
     /**
