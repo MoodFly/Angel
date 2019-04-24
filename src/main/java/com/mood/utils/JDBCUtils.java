@@ -39,8 +39,7 @@ public class JDBCUtils {
     private static final String    JDBC = "jdbc:";
     private CountDownLatch countDownLatch=null;
     private Connection connection=null;
-    ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
-    ExecutorService executor = new ThreadPoolExecutor(5, 200, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+    ExecutorService executor = new ThreadPoolExecutor(5, 200, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1024), new ThreadFactoryBuilder().setNameFormat("JDBCUtils-WORKER-POOL-%d").build(), new ThreadPoolExecutor.AbortPolicy());
     private Connection createConnection(Properties properties) {
         String driver = String.valueOf(getProperty(properties, AngelConstants.ANGEL_HOST));
         //useAffectedRows=true 设置连接参数具体的更新的数目而不是match的行数。默认false为match到的行数。
