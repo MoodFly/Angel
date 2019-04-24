@@ -1,6 +1,7 @@
 package com.mood.utils;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mood.constact.ApplicationCode;
@@ -23,7 +24,6 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
-import org.testng.collections.Maps;
 
 import java.nio.charset.Charset;
 import java.util.List;

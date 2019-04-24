@@ -12,6 +12,7 @@ import lombok.Data;
 public class AngelConstants {
     public static final String ROOT                              = "angel";
     public static final String JDBCUTILS                         = "jdbcutils";
+    public static final String METRIC                            = "metric";
     public static final String ANGEL_DRIVER                      = ROOT + "."+JDBCUTILS+ "." + "driver";
     public static final String ANGEL_DBTYPE                      = ROOT + "."+JDBCUTILS+ "." + "type";
     public static final String ANGEL_HOST                        = ROOT + "."+JDBCUTILS+ "." + "host";
@@ -19,4 +20,5 @@ public class AngelConstants {
     public static final String ANGEL_DB                          = ROOT + "."+JDBCUTILS+ "." + "db";
     public static final String ANGEL_USER                        = ROOT + "."+JDBCUTILS+ "." + "user";
     public static final String ANGEL_PASSWORD                    = ROOT + "."+JDBCUTILS+ "." + "password";
+    public static final String ANGEL_METRIC_PORT                = ROOT + "."+METRIC+ "." + "port";
 }
