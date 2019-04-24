@@ -41,7 +41,7 @@ public class MultiDataSourceAspect {
                 DatabaseContextHolder.setDatabaseType(DataSourceType.READ);
             }
             LOGGER.info("Choose DataSource:{} ",DatabaseContextHolder.getDatabaseType());
-            return joinPoint.proceed();//调用目标方法
+            return joinPoint.proceed();
         }catch (Exception e){
             dingDingNotifyUtil.sendDingDingMessage(e);
             throw new AngelException(ApplicationCode.unSwitchDataSource);

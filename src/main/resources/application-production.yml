@@ -38,7 +38,7 @@ write:
   jdbc:
     password: password
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://[server]:[port]/[database]?characterEncoding=utf-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
+    url: jdbc:mysql://[server]:[port]/[database]?characterEncoding=utf-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useAffectedRows=true
     username: name
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
@@ -48,5 +48,5 @@ read:
   jdbc:
     password: password
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://[server]:[port]/[database]?characterEncoding=utf-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
+    url: jdbc:mysql://[server]:[port]/[database]?characterEncoding=utf-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useAffectedRows=true
     username: name
