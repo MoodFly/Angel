@@ -130,7 +130,7 @@ public class HttpClientUtil {
     public String httpPostMethod(String url, String bodyParam, String contentType, Map<String,String> requestParam,Map<String,String> requestHeader,String encoding){
         String result=null;
         StringBuffer log=new StringBuffer();
-        if (url==null&&url.equals("")){throw new AngelException(ApplicationCode.errorRequestUrl);}
+        if (url==null||"".equals(url)){throw new AngelException(ApplicationCode.errorRequestUrl);}
         StringBuffer urlSend=new StringBuffer(url);
         log.append("请求地址:").append(url);
         List<NameValuePair> qparams = Lists.newArrayList();
@@ -206,7 +206,7 @@ public class HttpClientUtil {
     public HttpEntity httpGetMethodBase(String url, Map<String,String> requestParam,Map<String,String> requestHeader,String encoding){
         HttpEntity result=null;
         StringBuffer log=new StringBuffer();
-        if (url==null&&url.equals("")){throw new AngelException(ApplicationCode.errorRequestUrl);}
+        if (url==null||"".equals(url)){throw new AngelException(ApplicationCode.errorRequestUrl);}
         StringBuffer urlSend=new StringBuffer(url);
         log.append("请求地址:").append(url);
         List<NameValuePair> qparams = Lists.newArrayList();
