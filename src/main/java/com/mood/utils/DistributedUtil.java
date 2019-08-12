@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
+import java.util.Collections;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -41,12 +42,12 @@ public class DistributedUtil {
      * @Description: 获取锁
      * @version: 1.0
      */
-    private boolean distributedRedisLock(Jedis jedis, String key, String value, Integer expire){
+    private boolean distributedRedisLock(Jedis jedis, String lockKey, String requestId, Integer expire){
         if (jedis == null) {
             logger.error("get resource failed");
             return false;
         }
-        Object s = operation(jedis,setnx(key, value, expire));
+        Object s = operation(jedis,setnx(lockKey, requestId, expire));
         return predicate.test(s);
     }
     /**
@@ -56,8 +57,9 @@ public class DistributedUtil {
      * @Description: 释放锁
      * @version: 1.0
      */
-    private boolean distributedRedisUnLock(Jedis jedis, String key){
-        Object s = operation(jedis,(x) -> x.del(key));
+    private boolean distributedRedisUnLock(Jedis jedis, String lockKey, String requestId){
+        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+        Object s = operation(jedis,(x) -> x.eval(script,Collections.singletonList(lockKey),Collections.singletonList(requestId)));
         return predicate.test(s);
     }
     private  Object operation(Jedis jedis, Function<Jedis, Object> f) {
