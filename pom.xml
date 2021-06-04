@@ -19,7 +19,7 @@
 		<aspectj.version>1.9.1</aspectj.version>
 		<swagger2.version>2.7.0</swagger2.version>
 		<swagger-ui.version>2.7.0</swagger-ui.version>
-		<httpclient.version>4.5.3</httpclient.version>
+		<httpclient.version>4.5.13</httpclient.version>
 		<spring-cloud.version>Greenwich.RC2</spring-cloud.version>
 	</properties>
 
